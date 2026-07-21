@@ -24,20 +24,20 @@ struct LoginScreenView: View {
             )
             .ignoresSafeArea()
             
-                VStack {
-                    Circle()
-                        .fill(Color.blue.opacity(0.15))
-                        .frame(width: 300, height: 300)
-                        .blur(radius: 60)
-                        .offset(x: -80, y: -100)
-                    Spacer()
-                    Circle()
-                        .fill(Color.purple.opacity(0.12))
-                        .frame(width: 300, height: 300)
-                        .blur(radius: 60)
-                        .offset(x: 80, y: 100)
-                }
-        
+            VStack {
+                Circle()
+                    .fill(Color.blue.opacity(0.15))
+                    .frame(width: 300, height: 300)
+                    .blur(radius: 60)
+                    .offset(x: -80, y: -100)
+                Spacer()
+                Circle()
+                    .fill(Color.purple.opacity(0.12))
+                    .frame(width: 300, height: 300)
+                    .blur(radius: 60)
+                    .offset(x: 80, y: 100)
+            }
+            
             
             ScrollView {
                 VStack(spacing: 32) {
@@ -92,140 +92,141 @@ struct LoginScreenView: View {
                 }
             }
         }
-    
-    
-    private var phoneInputSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Mobile Number")
-                .font(.footnote)
-                .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
-            
-            HStack(spacing: 12) {
-                Text("+91")
-                    .fontWeight(.medium)
-                    .padding(.leading, 4)
-                
-                Divider()
-                    .frame(height: 24)
-                
-                TextField("Enter mobile number", text: $presenter.mobileNumber)
-                    .keyboardType(.phonePad)
-                    .textContentType(.telephoneNumber)
-            }
-            .padding()
-            .background(Color(.systemGroupedBackground).opacity(0.6))
-            .cornerRadius(12)
-        }
     }
-    
-    private var otpInputSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Security Code")
-                .font(.footnote)
-                .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
-            
-            HStack {
-                Image(systemName: "envelope.open.fill")
-                    .foregroundColor(.secondary)
+        
+        private var phoneInputSection: some View {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Mobile Number")
+                    .font(.footnote)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
                 
-                TextField("Enter 6-digit OTP", text: $presenter.otpCode)
-                    .keyboardType(.numberPad)
-                    .textContentType(.oneTimeCode)
-            }
-            .padding()
-            .background(Color(.systemGroupedBackground).opacity(0.6))
-            .cornerRadius(12)
-            
-            Button(action: {
-                withAnimation { presenter.currentStep = .phoneInput }
-            }) {
-                Text("Change phone number?")
-                    .font(.caption)
-                    .foregroundColor(.blue)
-            }
-            .padding(.top, 4)
-        }
-    }
-    
-    private var actionButton: some View {
-        Button(action: {
-            withAnimation {
-                if presenter.currentStep == .phoneInput {
-                    presenter.sendOtpToPhoneNumber()
-                    presenter.currentStep = .otpVerification
-                } else {
-                    presenter.verifyOtp()
-                }
-            }
-        }) {
-            HStack {
-                if presenter.isLoading {
-                    ProgressView()
-                        .tint(.white)
-                } else {
-                    Text(presenter.currentStep == .phoneInput ? "Send OTP" : "Verify & Proceed")
-                        .fontWeight(.bold)
-                    Image(systemName: "arrow.right")
+                HStack(spacing: 12) {
+                    Text("+91")
+                        .fontWeight(.medium)
+                        .padding(.leading, 4)
                     
+                    Divider()
+                        .frame(height: 24)
+                    
+                    TextField("Enter mobile number", text: $presenter.mobileNumber)
+                        .keyboardType(.phonePad)
+                        .textContentType(.telephoneNumber)
                 }
+                .padding()
+                .background(Color(.systemGroupedBackground).opacity(0.6))
+                .cornerRadius(12)
             }
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(StaticColor.shared.color())
-            .foregroundColor(.white)
-            .cornerRadius(12)
         }
-        .disabled(presenter.isLoading)
-    }
-    
-    private var socialLoginSection: some View {
-        VStack(spacing: 20) {
-            HStack {
-                VStack { Divider() }
-                Text("or continue with")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .padding(.horizontal, 8)
-                VStack { Divider() }
-            }
-            .padding(.horizontal, 24)
-            
-            HStack(spacing: 16) {
-                Button(action: presenter.loginWithApple) {
-                    HStack {
-                        Image(systemName: "apple.logo")
-                            .font(.system(size: 18))
-                        Text("Apple")
-                            .fontWeight(.medium)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.primary)
-                    .foregroundColor(Color(.systemBackground))
-                    .cornerRadius(12)
-                }
+        
+        private var otpInputSection: some View {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Security Code")
+                    .font(.footnote)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
                 
-                Button(action: presenter.loginWithGoogle) {
-                    HStack {
-                        Image(systemName: "g.circle.fill")
-                            .font(.system(size: 18))
-                        Text("Google")
-                            .fontWeight(.medium)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .foregroundColor(.primary)
-                    .cornerRadius(12)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color(.separator), lineWidth: 1)
-                    )
+                HStack {
+                    Image(systemName: "envelope.open.fill")
+                        .foregroundColor(.secondary)
+                    
+                    TextField("Enter 6-digit OTP", text: $presenter.otpCode)
+                        .keyboardType(.numberPad)
+                        .textContentType(.oneTimeCode)
                 }
+                .padding()
+                .background(Color(.systemGroupedBackground).opacity(0.6))
+                .cornerRadius(12)
+                
+                Button(action: {
+                    withAnimation { presenter.currentStep = .phoneInput }
+                }) {
+                    Text("Change phone number?")
+                        .font(.caption)
+                        .foregroundColor(.blue)
+                }
+                .padding(.top, 4)
             }
-            .padding(.horizontal, 20)
+        }
+        
+        private var actionButton: some View {
+            Button(action: {
+                withAnimation {
+                    if presenter.currentStep == .phoneInput {
+                        presenter.sendOtpToPhoneNumber()
+                        presenter.currentStep = .otpVerification
+                    } else {
+                        presenter.verifyOtp()
+                    }
+                }
+            }) {
+                HStack {
+                    if presenter.isLoading {
+                        ProgressView()
+                            .tint(.white)
+                    } else {
+                        Text(presenter.currentStep == .phoneInput ? "Send OTP" : "Verify & Proceed")
+                            .fontWeight(.bold)
+                        Image(systemName: "arrow.right")
+                        
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(StaticColor.shared.color())
+                .foregroundColor(.white)
+                .cornerRadius(12)
+            }
+            .disabled(presenter.isLoading)
+        }
+        
+        private var socialLoginSection: some View {
+            VStack(spacing: 20) {
+                HStack {
+                    VStack { Divider() }
+                    Text("or continue with")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .padding(.horizontal, 8)
+                    VStack { Divider() }
+                }
+                .padding(.horizontal, 24)
+                
+                HStack(spacing: 16) {
+                    Button(action: presenter.loginWithApple) {
+                        HStack {
+                            Image(systemName: "apple.logo")
+                                .font(.system(size: 18))
+                            Text("Apple")
+                                .fontWeight(.medium)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.primary)
+                        .foregroundColor(Color(.systemBackground))
+                        .cornerRadius(12)
+                    }
+                    
+                    Button(action: presenter.loginWithGoogle) {
+                        HStack {
+                            Image(systemName: "g.circle.fill")
+                                .font(.system(size: 18))
+                            Text("Google")
+                                .fontWeight(.medium)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color(.secondarySystemGroupedBackground))
+                        .foregroundColor(.primary)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color(.separator), lineWidth: 1)
+                        )
+                    }
+                }
+                .padding(.horizontal, 20)
+            }
         }
     }
-}
+
